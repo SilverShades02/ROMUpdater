@@ -18,7 +18,6 @@ package io.github.uditkarode.updater
 
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
 import com.topjohnwu.superuser.BusyBox
 import com.topjohnwu.superuser.CallbackList
 import android.widget.ScrollView
@@ -59,7 +58,6 @@ class Flasher : AppCompatActivity() {
             aclConsole.add("-- REBOOTING --")
             Shell.sh("echo \"- execute /system/bin/reboot here -\"").to(aclConsole).exec()
         }, 5500)
-        writeDone()
     }
 
     private inner class AppendCallbackList : CallbackList<String>() {
@@ -72,9 +70,5 @@ class Flasher : AppCompatActivity() {
         fun blank(){
             tvConsole.append("\n")
         }
-    }
-
-    fun writeDone(){
-        findViewById<View>(R.id.button_panel).visibility = View.VISIBLE
     }
 }
