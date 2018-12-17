@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:title="Updater"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:collapsedTitleTextAppearance="@style/TextAppearanceInverted"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleTextAppearance="@style/TextAppearanceTransparent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="86dp"
+                    android:paddingBottom="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    app:layout_collapseMode="parallax">
+
+                <TextView
+                        android:id="@+id/header_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:paddingBottom="16dp"
+                        android:text="@string/rom_name"
+                        android:textColor="#FFFFFF"
+                        fontPath="CircularB.ttf"
+                        tools:ignore="MissingPrefix"
+                        android:textSize="56sp"
+                />
+
+                <TextView
+                        android:id="@+id/header_build_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/header_title"
+                        android:text="@string/sample_android_version"
+                        fontPath="ProductSansR.ttf"
+                        tools:ignore="MissingPrefix"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                />
+
+                <TextView
+                        android:id="@+id/header_build_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/header_build_version"
+                        android:text="@string/sample_build_date"
+                        android:textColor="#FFFFFF"
+                        fontPath="ProductSansR.ttf"
+                        tools:ignore="MissingPrefix"
+                        android:textSize="12sp"
+                />
+
+                <TextView
+                        android:id="@+id/header_last_check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/header_build_date"
+                        android:text="@string/sample_android_flavour"
+                        android:textColor="#FFFFFF"
+                        fontPath="ProductSansR.ttf"
+                        tools:ignore="MissingPrefix"
+                        android:textSize="12sp"
+                />
+
+            </RelativeLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:textColor="#FFFFFF"
+                    app:title="Update"
+                    app:layout_collapseMode="pin"
+            />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+            android:id="@+id/no_new_updates_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="46dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:id="@+id/no-new"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/list_no_updates"
+                    android:textColor="?android:textColorSecondary"
+            />
+
+            <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/nonotifs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_below="@id/no-new"
+                    android:layout_marginTop="50sp"
+                    app:lottie_fileName="noupdate.json"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false" />
+
+        </RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="5dp"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

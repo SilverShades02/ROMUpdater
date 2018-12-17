@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ROM Updater</string>
+    <string name="rom_name">Example ROM</string>
+    <string name="list_no_updates">No updates available!</string>
+    <string name="close">Close</string>
+    <string name="reboot">Reboot</string>
+    <string name="sample_android_version">Android Pie</string>
+    <string name="sample_build_date">Build 16.12.18</string>
+    <string name="sample_android_flavour">MIUI 8</string>
+</resources>
