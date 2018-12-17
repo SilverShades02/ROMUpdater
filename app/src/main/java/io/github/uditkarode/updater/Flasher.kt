@@ -17,6 +17,7 @@ Copyright 2018 Udit Karode
 package io.github.uditkarode.updater
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import com.topjohnwu.superuser.BusyBox
 import com.topjohnwu.superuser.CallbackList
@@ -29,16 +30,35 @@ class Flasher : AppCompatActivity() {
 
     private val tvConsole : TextView by lazy { findViewById<TextView>(R.id.txtLog) }
     private val svRoot : ScrollView by lazy { findViewById<ScrollView>(R.id.sv) }
-    private val conlist = AppendCallbackList()
+    private val aclConsole = AppendCallbackList()
 
     override fun onCreate(savedInstanceState : Bundle?) {
         super.onCreate(savedInstanceState)
         BusyBox.setup(this@Flasher)
         setContentView(R.layout.activity_flash)
         
-        // @todo: change these to actually do something
-        Shell.sh("echo hi", "whoami", "pwd").to(conlist).exec()
+        // @todo: remove commented lines after UI testing
+        aclConsole.add("- Adding recovery boot flag")
+        //Shell.su("echo 'boot-recovery ' > /cache/recovery/command").submit()
+        // @todo: make sure the file ROMUpdates/update.zip exists
+        aclConsole.add("- Adding recovery flash command")
+        //Shell.su("echo '--update_package=SDCARD:ROMUpdates/update.zip' >> /cache/recovery/command").submit()
+        aclConsole.blank()
+        aclConsole.add("Rebooting in 5 seconds:")
 
+        for(i in 5 downTo 1){
+            Handler().postDelayed({
+                aclConsole.add("$i")
+            }, (1000 * (6-i)).toLong())
+        }
+
+        aclConsole.blank()
+
+        Handler().postDelayed({
+            aclConsole.blank()
+            aclConsole.add("-- REBOOTING --")
+            Shell.sh("echo \"- execute /system/bin/reboot here -\"").to(aclConsole).exec()
+        }, 5500)
         writeDone()
     }
 
@@ -47,6 +67,10 @@ class Flasher : AppCompatActivity() {
             tvConsole.append(s)
             tvConsole.append("\n")
             svRoot.postDelayed({ svRoot.fullScroll(ScrollView.FOCUS_DOWN) }, 10)
+        }
+
+        fun blank(){
+            tvConsole.append("\n")
         }
     }
 
