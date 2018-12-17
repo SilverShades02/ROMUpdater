@@ -62,6 +62,6 @@ class Main : AppCompatActivity() {
     }
 
     private fun getProp(key: String): String {
-        return Shell.sh("getprop $key").exec().out.get(0)
+        return Shell.sh("getprop $key").exec().out[0]
     }
 }
