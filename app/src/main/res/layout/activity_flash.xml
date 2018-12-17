@@ -28,31 +28,4 @@
 
     </ScrollView>
 
-    <LinearLayout
-            android:id="@+id/button_panel"
-            style="?android:buttonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-        <Button
-                android:id="@+id/close"
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="@string/close" />
-
-        <Button
-                android:id="@+id/reboot"
-                style="?android:borderlessButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="@string/reboot" />
-
-    </LinearLayout>
-
 </LinearLayout>
