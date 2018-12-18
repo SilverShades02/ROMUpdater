@@ -29,6 +29,11 @@ import com.androidnetworking.AndroidNetworking
 import com.tonyodev.fetch2.*
 import com.topjohnwu.superuser.Shell
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
+import com.airbnb.lottie.network.NetworkFetcher.fetch
+import com.tonyodev.fetch2.Download
+import com.tonyodev.fetch2.FetchListener
+import com.tonyodev.fetch2core.DownloadBlock
+import org.jetbrains.annotations.NotNull
 
 
 class Main : AppCompatActivity() {
@@ -52,6 +57,62 @@ class Main : AppCompatActivity() {
             val request = Request(downUrl, Constants.UPDATE_PACKAGE)
             request.priority = Priority.HIGH
             request.networkType = NetworkType.ALL
+
+            val fetchListener = object : FetchListener {
+                override fun onCancelled(download: Download) {
+                    TODO("add cancel button to UI")
+                }
+
+                override fun onCompleted(download: Download) {
+                    TODO("show 'install now?' option to user") 
+                }
+
+                override fun onDeleted(download: Download) {
+                    TODO("Show dialog based error") 
+                }
+
+                override fun onError(download: Download, error: Error, throwable: Throwable?) {
+                    TODO("show dialog based error") 
+                }
+
+                override fun onPaused(download: Download) {
+                    TODO("show 'paused' status on UI") 
+                }
+
+                override fun onProgress(download: Download, etaInMilliSeconds: Long, downloadedBytesPerSecond: Long) {
+                    TODO("increment progress in app/notification") 
+                }
+
+                override fun onQueued(download: Download, waitingOnNetwork: Boolean) {}
+
+                override fun onRemoved(download: Download) {
+                    TODO("update cancelled toast")
+                }
+
+                override fun onResumed(download: Download) {
+                    TODO("resuming download toast")
+                }
+
+                override fun onStarted(download: Download, downloadBlocks: List<DownloadBlock>, totalBlocks: Int) {
+                    TODO("show user update downloading ui and notification")
+                }
+
+                override fun onWaitingNetwork(download: Download) {
+                    TODO("show user 'waiting for network' message")
+                }
+
+                override fun onDownloadBlockUpdated (
+                    download: Download,
+                    downloadBlock: DownloadBlock,
+                    totalBlocks: Int
+                ) {
+                    TODO("show user number of blocks downloaded")
+                }
+
+                override fun onAdded(download: Download) {}
+            }
+
+            fetch.addListener(fetchListener)
         }
     }
 
