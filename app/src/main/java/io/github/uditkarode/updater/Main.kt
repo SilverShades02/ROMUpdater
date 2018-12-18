@@ -31,14 +31,14 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 class Main : AppCompatActivity() {
 
+    private val tvHeader : TextView by lazy { findViewById<TextView>(R.id.header_title) }
+    private val lavNoNotifs : LottieAnimationView by lazy { findViewById<LottieAnimationView>(R.id.nonotifs) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         AndroidNetworking.initialize(applicationContext)
-
-        val tvHeader : TextView = findViewById(R.id.header_title)
-        val lavNoNotifs : LottieAnimationView = findViewById(R.id.nonotifs)
 
         Toast.makeText(this@Main, getProp("ro.build.date.utc"), Toast.LENGTH_LONG).show() //@todo: do something with this
 
