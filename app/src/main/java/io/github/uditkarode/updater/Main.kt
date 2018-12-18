@@ -29,12 +29,9 @@ import com.androidnetworking.AndroidNetworking
 import com.tonyodev.fetch2.*
 import com.topjohnwu.superuser.Shell
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
-import com.airbnb.lottie.network.NetworkFetcher.fetch
 import com.tonyodev.fetch2.Download
 import com.tonyodev.fetch2.FetchListener
 import com.tonyodev.fetch2core.DownloadBlock
-import org.jetbrains.annotations.NotNull
-
 
 class Main : AppCompatActivity() {
 
@@ -50,7 +47,7 @@ class Main : AppCompatActivity() {
         setupUi()
 
         AndroidNetworking.initialize(applicationContext)
-        Toast.makeText(this@Main, getProp("ro.build.date.utc"), Toast.LENGTH_LONG).show() //@todo: do something with this
+        Toast.makeText(this@Main, getProp(Constants.PROP_BUILD_DATE), Toast.LENGTH_LONG).show() //@todo: do something with this
 
         if(updateAvailable()){
             fetch = Fetch.getInstance(FetchConfiguration.Builder(this).setDownloadConcurrentLimit(1).build())
