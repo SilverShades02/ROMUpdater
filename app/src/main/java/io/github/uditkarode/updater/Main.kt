@@ -21,9 +21,11 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import co.revely.gradient.RevelyGradient
+import com.afollestad.materialdialogs.MaterialDialog
 import com.airbnb.lottie.LottieAnimationView
 import com.androidnetworking.AndroidNetworking
 import com.tonyodev.fetch2.*
@@ -38,6 +40,7 @@ class Main : AppCompatActivity() {
     private lateinit var fetch: Fetch
     private val tvHeader: TextView by lazy { findViewById<TextView>(R.id.header_title) }
     private val lavNoNotifs: LottieAnimationView by lazy { findViewById<LottieAnimationView>(R.id.nonotifs) }
+    enum class UpdateStatus { AVAILABLE, UNAVAILABLE }
 
     private lateinit var downUrl: String // @todo: obtain from json
 
@@ -49,67 +52,85 @@ class Main : AppCompatActivity() {
         AndroidNetworking.initialize(applicationContext)
         Toast.makeText(this@Main, getProp(Constants.PROP_BUILD_DATE), Toast.LENGTH_LONG).show() //@todo: do something with this
 
-        if(updateAvailable()){
-            fetch = Fetch.getInstance(FetchConfiguration.Builder(this).setDownloadConcurrentLimit(1).build())
-            val request = Request(downUrl, Constants.UPDATE_PACKAGE)
-            request.priority = Priority.HIGH
-            request.networkType = NetworkType.ALL
+        val uc = UpdateChecker()
 
-            val fetchListener = object : FetchListener {
-                override fun onCancelled(download: Download) {
-                    TODO("add cancel button to UI")
+        if(uc.getJson() == RequestStatus.SUCCESSFUL){
+            if(UpdateChecker().updateAvailable()){
+                RevelyGradient
+                    .linear()
+                    .colors(intArrayOf(Color.parseColor("#c31432"), Color.parseColor("#240b36"))) //@todo: find a better gradient ffs
+                    .on(findViewById(R.id.availtext) as TextView)
+
+                updateType(UpdateStatus.AVAILABLE)
+                downUrl = ""//@todo: remove after testing
+                fetch = Fetch.getInstance(FetchConfiguration.Builder(this).setDownloadConcurrentLimit(1).build())
+                val request = Request(downUrl, Constants.UPDATE_PACKAGE)
+                request.priority = Priority.HIGH
+                request.networkType = NetworkType.ALL
+
+                val fetchListener = object : FetchListener {
+                    override fun onCancelled(download: Download) {
+                        TODO("add cancel button to UI")
+                    }
+
+                    override fun onCompleted(download: Download) {
+                        TODO("show 'install now?' option to user")
+                    }
+
+                    override fun onDeleted(download: Download) {
+                        TODO("Show dialog based error")
+                    }
+
+                    override fun onError(download: Download, error: Error, throwable: Throwable?) {
+                        TODO("show dialog based error")
+                    }
+
+                    override fun onPaused(download: Download) {
+                        TODO("show 'paused' status on UI")
+                    }
+
+                    override fun onProgress(download: Download, etaInMilliSeconds: Long, downloadedBytesPerSecond: Long) {
+                        TODO("increment progress in app/notification")
+                    }
+
+                    override fun onQueued(download: Download, waitingOnNetwork: Boolean) {}
+
+                    override fun onRemoved(download: Download) {
+                        TODO("update cancelled toast")
+                    }
+
+                    override fun onResumed(download: Download) {
+                        TODO("resuming download toast")
+                    }
+
+                    override fun onStarted(download: Download, downloadBlocks: List<DownloadBlock>, totalBlocks: Int) {
+                        TODO("show user update downloading ui and notification")
+                    }
+
+                    override fun onWaitingNetwork(download: Download) {
+                        TODO("show user 'waiting for network' message")
+                    }
+
+                    override fun onDownloadBlockUpdated (
+                        download: Download,
+                        downloadBlock: DownloadBlock,
+                        totalBlocks: Int
+                    ) {
+                        TODO("show user number of blocks downloaded")
+                    }
+
+                    override fun onAdded(download: Download) {}
                 }
 
-                override fun onCompleted(download: Download) {
-                    TODO("show 'install now?' option to user") 
-                }
-
-                override fun onDeleted(download: Download) {
-                    TODO("Show dialog based error") 
-                }
-
-                override fun onError(download: Download, error: Error, throwable: Throwable?) {
-                    TODO("show dialog based error") 
-                }
-
-                override fun onPaused(download: Download) {
-                    TODO("show 'paused' status on UI") 
-                }
-
-                override fun onProgress(download: Download, etaInMilliSeconds: Long, downloadedBytesPerSecond: Long) {
-                    TODO("increment progress in app/notification") 
-                }
-
-                override fun onQueued(download: Download, waitingOnNetwork: Boolean) {}
-
-                override fun onRemoved(download: Download) {
-                    TODO("update cancelled toast")
-                }
-
-                override fun onResumed(download: Download) {
-                    TODO("resuming download toast")
-                }
-
-                override fun onStarted(download: Download, downloadBlocks: List<DownloadBlock>, totalBlocks: Int) {
-                    TODO("show user update downloading ui and notification")
-                }
-
-                override fun onWaitingNetwork(download: Download) {
-                    TODO("show user 'waiting for network' message")
-                }
-
-                override fun onDownloadBlockUpdated (
-                    download: Download,
-                    downloadBlock: DownloadBlock,
-                    totalBlocks: Int
-                ) {
-                    TODO("show user number of blocks downloaded")
-                }
-
-                override fun onAdded(download: Download) {}
+                fetch.addListener(fetchListener)
+            } else {
+                updateType(UpdateStatus.UNAVAILABLE)
             }
-
-            fetch.addListener(fetchListener)
+        } else {
+            MaterialDialog(this@Main).show {
+                title(text = "Update check failed!")
+                message(text = "Check your internet connection.")
+            }
         }
     }
 
@@ -119,8 +140,8 @@ class Main : AppCompatActivity() {
 
     private fun setupUi(){
         RevelyGradient
-            .sweep()
-            .colors(intArrayOf(Color.parseColor("#FF2525"), Color.parseColor("#6078EA"))) //@todo: find a better gradient ffs
+            .linear()
+            .colors(intArrayOf(Color.parseColor("#649173"), Color.parseColor("#DBD5A4"))) //@todo: find a better gradient ffs
             .on(tvHeader)
 
         tvHeader.setOnClickListener {
@@ -137,8 +158,8 @@ class Main : AppCompatActivity() {
         return Shell.sh("getprop $key").exec().out[0]
     }
 
-    private fun updateAvailable() : Boolean {
-        // @todo: check for updates using json file on github (raw)
-        return true
+    private fun updateType(a: UpdateStatus) {
+        if(a == UpdateStatus.AVAILABLE) findViewById<View>(R.id.noavail).visibility = View.GONE
+        else findViewById<View>(R.id.avail).visibility = View.GONE
     }
 }
