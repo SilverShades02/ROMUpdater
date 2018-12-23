@@ -17,7 +17,12 @@
 package io.github.uditkarode.updater;
 
 public final class Constants {
+
+    // CHANGE THESE CONSTANTS //
+    public static final String DEVICE_CODENAME = "zero";
     public static final String JSON_URL = ""; // raw.githubusercontent.com.....
+
+    // DO NOT CHANGE //
     public static final String PROP_BUILD_DATE = "ro.build.date.utc";
     public static final String UPDATE_PACKAGE = "ROMUpdater/update.zip";
 }

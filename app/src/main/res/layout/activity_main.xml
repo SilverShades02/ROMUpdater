@@ -104,6 +104,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
+                android:id="@+id/noavail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -125,20 +126,46 @@
                     android:layout_marginTop="50sp"
                     app:lottie_fileName="noupdate.json"
                     app:lottie_autoPlay="false"
-                    app:lottie_loop="false" />
-
+                    app:lottie_loop="false"
+            />
         </RelativeLayout>
-
     </androidx.core.widget.NestedScrollView>
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+    <androidx.core.widget.NestedScrollView
+            android:id="@+id/new_updates_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="5dp"
-            android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    />
+            android:padding="46dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+                android:id="@+id/avail"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/availtext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="System update available!"
+                    android:textSize="16sp"
+                    fontPath="ProductSansR.ttf"
+                    android:layout_gravity="center_horizontal"
+                    tools:ignore="MissingPrefix"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20sp"
+                    android:text="Changelog:\n\nNew fingerprint hal\nRemoved HD Capable Notification"
+                    android:textSize="18sp"
+                    fontPath="ProductSansR.ttf"
+                    android:textColor="#000000"
+                    tools:ignore="MissingPrefix"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
