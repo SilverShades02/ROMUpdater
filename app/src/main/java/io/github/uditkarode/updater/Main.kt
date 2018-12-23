@@ -59,7 +59,7 @@ class Main : AppCompatActivity() {
                 RevelyGradient
                     .linear()
                     .colors(intArrayOf(Color.parseColor("#c31432"), Color.parseColor("#240b36"))) //@todo: find a better gradient ffs
-                    .on(findViewById(R.id.availtext) as TextView)
+                    .on(findViewById<TextView>(R.id.availtext))
 
                 updateType(UpdateStatus.AVAILABLE)
                 downUrl = ""//@todo: remove after testing
