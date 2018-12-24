@@ -19,28 +19,28 @@ package io.github.uditkarode.updater
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import co.revely.gradient.RevelyGradient
 import com.afollestad.materialdialogs.MaterialDialog
 import com.airbnb.lottie.LottieAnimationView
-import com.androidnetworking.AndroidNetworking
 import com.tonyodev.fetch2.*
+import com.tonyodev.fetch2core.DownloadBlock
 import com.topjohnwu.superuser.Shell
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
-import com.tonyodev.fetch2.Download
-import com.tonyodev.fetch2.FetchListener
-import com.tonyodev.fetch2core.DownloadBlock
 
 class Main : AppCompatActivity() {
 
     private lateinit var fetch: Fetch
     private val tvHeader: TextView by lazy { findViewById<TextView>(R.id.header_title) }
     private val lavNoNotifs: LottieAnimationView by lazy { findViewById<LottieAnimationView>(R.id.nonotifs) }
+
     enum class UpdateStatus { AVAILABLE, UNAVAILABLE }
+
+    private val uc: UpdateChecker = UpdateChecker()
 
     private lateinit var downUrl: String // @todo: obtain from json
 
@@ -49,19 +49,22 @@ class Main : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupUi()
 
-        AndroidNetworking.initialize(applicationContext)
-        Toast.makeText(this@Main, getProp(Constants.PROP_BUILD_DATE), Toast.LENGTH_LONG).show() //@todo: do something with this
+        Toast.makeText(this@Main, getProp(Constants.PROP_BUILD_DATE), Toast.LENGTH_LONG)
+            .show() //@todo: do something with this
 
-        val uc = UpdateChecker()
-
-        if(uc.getJson() == RequestStatus.SUCCESSFUL){
-            if(UpdateChecker().updateAvailable()){
+        if (uc.getJson() == RequestStatus.SUCCESSFUL) {
+            if (UpdateChecker().updateAvailable()) {
                 RevelyGradient
                     .linear()
-                    .colors(intArrayOf(Color.parseColor("#c31432"), Color.parseColor("#240b36"))) //@todo: find a better gradient ffs
+                    .colors(
+                        intArrayOf(
+                            Color.parseColor("#c31432"),
+                            Color.parseColor("#240b36")
+                        )
+                    ) //@todo: find a better gradient ffs
                     .on(findViewById<TextView>(R.id.availtext))
-
                 updateType(UpdateStatus.AVAILABLE)
+
                 downUrl = ""//@todo: remove after testing
                 fetch = Fetch.getInstance(FetchConfiguration.Builder(this).setDownloadConcurrentLimit(1).build())
                 val request = Request(downUrl, Constants.UPDATE_PACKAGE)
@@ -89,7 +92,11 @@ class Main : AppCompatActivity() {
                         TODO("show 'paused' status on UI")
                     }
 
-                    override fun onProgress(download: Download, etaInMilliSeconds: Long, downloadedBytesPerSecond: Long) {
+                    override fun onProgress(
+                        download: Download,
+                        etaInMilliSeconds: Long,
+                        downloadedBytesPerSecond: Long
+                    ) {
                         TODO("increment progress in app/notification")
                     }
 
@@ -111,7 +118,7 @@ class Main : AppCompatActivity() {
                         TODO("show user 'waiting for network' message")
                     }
 
-                    override fun onDownloadBlockUpdated (
+                    override fun onDownloadBlockUpdated(
                         download: Download,
                         downloadBlock: DownloadBlock,
                         totalBlocks: Int
@@ -131,17 +138,24 @@ class Main : AppCompatActivity() {
                 title(text = "Update check failed!")
                 message(text = "Check your internet connection.")
             }
+
         }
     }
+
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 
-    private fun setupUi(){
+    private fun setupUi() {
         RevelyGradient
             .linear()
-            .colors(intArrayOf(Color.parseColor("#649173"), Color.parseColor("#DBD5A4"))) //@todo: find a better gradient ffs
+            .colors(
+                intArrayOf(
+                    Color.parseColor("#649173"),
+                    Color.parseColor("#DBD5A4")
+                )
+            ) //@todo: find a better gradient ffs
             .on(tvHeader)
 
         tvHeader.setOnClickListener {
@@ -159,7 +173,7 @@ class Main : AppCompatActivity() {
     }
 
     private fun updateType(a: UpdateStatus) {
-        if(a == UpdateStatus.AVAILABLE) findViewById<View>(R.id.noavail).visibility = View.GONE
+        if (a == UpdateStatus.AVAILABLE) findViewById<View>(R.id.noavail).visibility = View.GONE
         else findViewById<View>(R.id.avail).visibility = View.GONE
     }
 }
