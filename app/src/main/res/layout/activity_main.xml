@@ -96,12 +96,22 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <RelativeLayout
+            android:id="@+id/loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ProgressBar android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
     <androidx.core.widget.NestedScrollView
             android:id="@+id/no_new_updates_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="46dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
         <RelativeLayout
                 android:id="@+id/noavail"

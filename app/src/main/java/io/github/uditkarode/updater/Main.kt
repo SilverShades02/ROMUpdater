@@ -195,6 +195,8 @@ class Main : AppCompatActivity() {
     }
 
     private fun updateType(a: UpdateStatus) {
+        findViewById<View>(R.id.loader).visibility = View.GONE
+
         if (a == UpdateStatus.AVAILABLE) findViewById<View>(R.id.avail).visibility = View.VISIBLE
         else findViewById<View>(R.id.noavail).visibility = View.VISIBLE
     }
