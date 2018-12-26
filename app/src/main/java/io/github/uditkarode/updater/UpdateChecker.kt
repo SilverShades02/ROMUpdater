@@ -1,7 +1,6 @@
 package io.github.uditkarode.updater
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.topjohnwu.superuser.Shell
 import org.json.JSONObject
 import java.sql.Timestamp
@@ -32,10 +31,7 @@ class UpdateChecker {
         joResponse = joResponse.getJSONObject(Constants.DEVICE_CODENAME).getJSONObject(Constants.ROM_NAME)
         return if (joResponse.getString("type") == "OTA")
             SimpleDateFormat("dd/MM/yyyy").parse(joResponse.getString("date")).compareTo(
-                SimpleDateFormat("dd/MM/yyyy").parse(
-                    getProp("ro.ota.date2")
-                )
-            ).toBoolean()
+                SimpleDateFormat("dd/MM/yyyy").parse(getProp("2"))).toBoolean()
         else
             SimpleDateFormat("dd/MM/yyyy").parse(joResponse.getString("date")).compareTo(Date(Timestamp(getProp("ro.build.date.utc").toLong()).time)).toBoolean()
     }

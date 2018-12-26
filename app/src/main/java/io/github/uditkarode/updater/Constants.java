@@ -24,6 +24,7 @@ public class Constants {
     public static final String ROM_NAME = "ExampleROM";
 
     // DO NOT CHANGE //
+    public static final String PROP_OTA_DATE = "ro.ota.date2";
     public static final String PROP_BUILD_DATE = "ro.build.date.utc";
     public static final String UPDATE_PACKAGE = "ROMUpdater/update.zip";
 }
