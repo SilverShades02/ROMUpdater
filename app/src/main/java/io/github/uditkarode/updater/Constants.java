@@ -16,18 +16,12 @@
 
 package io.github.uditkarode.updater;
 
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-import java.io.IOException;
-
 public class Constants {
 
     // CHANGE THESE CONSTANTS //
     public static final String DEVICE_CODENAME = "zero";
     public static final String JSON_URL = "https://uditkarode.github.io/ROMUpdater/server.json";
+    public static final String ROM_NAME = "ExampleROM";
 
     // DO NOT CHANGE //
     public static final String PROP_BUILD_DATE = "ro.build.date.utc";

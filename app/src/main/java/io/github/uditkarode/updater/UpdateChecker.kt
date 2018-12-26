@@ -1,6 +1,7 @@
 package io.github.uditkarode.updater
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.topjohnwu.superuser.Shell
 import org.json.JSONObject
 import java.sql.Timestamp
@@ -12,21 +13,27 @@ enum class RequestStatus { SUCCESSFUL, FAILED }
 fun Int.toBoolean() = this > 0
 
 class UpdateChecker {
-    private var sResponse: String = "init"
-    private var joResponse: JSONObject = JSONObject()
-
-    fun getJson(): RequestStatus {
-        return RequestStatus.SUCCESSFUL
+    companion object {
+        private var reqSuccess: Boolean = false
+        private var joResponse: JSONObject = JSONObject()
     }
 
+    fun setJson(json: JSONObject) {
+        reqSuccess = true
+        joResponse = json
+    }
+
+    fun getStatus(): RequestStatus {
+        return if(reqSuccess) RequestStatus.SUCCESSFUL else RequestStatus.FAILED
+    }
 
     @SuppressLint("SimpleDateFormat")
     fun updateAvailable(): Boolean {
-        joResponse = JSONObject(sResponse)
+        joResponse = joResponse.getJSONObject(Constants.DEVICE_CODENAME).getJSONObject(Constants.ROM_NAME)
         return if (joResponse.getString("type") == "OTA")
             SimpleDateFormat("dd/MM/yyyy").parse(joResponse.getString("date")).compareTo(
                 SimpleDateFormat("dd/MM/yyyy").parse(
-                    getProp("ro.ota.date")
+                    getProp("ro.ota.date2")
                 )
             ).toBoolean()
         else

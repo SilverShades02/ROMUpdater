@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -27,9 +28,13 @@ import androidx.appcompat.app.AppCompatActivity
 import co.revely.gradient.RevelyGradient
 import com.afollestad.materialdialogs.MaterialDialog
 import com.airbnb.lottie.LottieAnimationView
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2core.DownloadBlock
 import com.topjohnwu.superuser.Shell
+import org.json.JSONObject
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 class Main : AppCompatActivity() {
@@ -47,12 +52,28 @@ class Main : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        AndroidNetworking.initialize(this)
         setupUi()
 
         Toast.makeText(this@Main, getProp(Constants.PROP_BUILD_DATE), Toast.LENGTH_LONG)
             .show() //@todo: do something with this
 
-        if (uc.getJson() == RequestStatus.SUCCESSFUL) {
+        AndroidNetworking.get(Constants.JSON_URL).build().getAsJSONObject(object: JSONObjectRequestListener {
+            override fun onResponse(response: JSONObject?) {
+                Log.e("asd", response.toString())
+                if (response != null) uc.setJson(response)
+                processUpdate()
+            }
+
+            override fun onError(anError: ANError?) {
+                showError()
+            }
+
+        })
+    }
+
+    private fun processUpdate() {
+        if (uc.getStatus() == RequestStatus.SUCCESSFUL) {
             if (UpdateChecker().updateAvailable()) {
                 RevelyGradient
                     .linear()
@@ -61,7 +82,7 @@ class Main : AppCompatActivity() {
                             Color.parseColor("#c31432"),
                             Color.parseColor("#240b36")
                         )
-                    ) //@todo: find a better gradient ffs
+                    )
                     .on(findViewById<TextView>(R.id.availtext))
                 updateType(UpdateStatus.AVAILABLE)
 
@@ -85,7 +106,7 @@ class Main : AppCompatActivity() {
                     }
 
                     override fun onError(download: Download, error: Error, throwable: Throwable?) {
-                        TODO("show dialog based error")
+                        showError()
                     }
 
                     override fun onPaused(download: Download) {
@@ -133,15 +154,16 @@ class Main : AppCompatActivity() {
             } else {
                 updateType(UpdateStatus.UNAVAILABLE)
             }
-        } else {
-            MaterialDialog(this@Main).show {
-                title(text = "Update check failed!")
-                message(text = "Check your internet connection.")
-            }
+        } else showError()
 
-        }
     }
 
+    fun showError(){
+        MaterialDialog(this@Main).show {
+            title(text = "Update check failed!")
+            message(text = "Check your internet connection.")
+        }
+    }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
@@ -173,7 +195,7 @@ class Main : AppCompatActivity() {
     }
 
     private fun updateType(a: UpdateStatus) {
-        if (a == UpdateStatus.AVAILABLE) findViewById<View>(R.id.noavail).visibility = View.GONE
-        else findViewById<View>(R.id.avail).visibility = View.GONE
+        if (a == UpdateStatus.AVAILABLE) findViewById<View>(R.id.avail).visibility = View.VISIBLE
+        else findViewById<View>(R.id.noavail).visibility = View.VISIBLE
     }
 }
