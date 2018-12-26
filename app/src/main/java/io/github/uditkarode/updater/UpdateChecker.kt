@@ -9,8 +9,6 @@ import java.util.*
 
 enum class RequestStatus { SUCCESSFUL, FAILED }
 
-fun Int.toBoolean() = this > 0
-
 class UpdateChecker {
     companion object {
         private var reqSuccess: Boolean = false
@@ -29,11 +27,13 @@ class UpdateChecker {
     @SuppressLint("SimpleDateFormat")
     fun updateAvailable(): Boolean {
         joResponse = joResponse.getJSONObject(Constants.DEVICE_CODENAME).getJSONObject(Constants.ROM_NAME)
-        return if (joResponse.getString("type") == "OTA")
-            SimpleDateFormat("dd/MM/yyyy").parse(joResponse.getString("date")).compareTo(
-                SimpleDateFormat("dd/MM/yyyy").parse(getProp("2"))).toBoolean()
-        else
-            SimpleDateFormat("dd/MM/yyyy").parse(joResponse.getString("date")).compareTo(Date(Timestamp(getProp("ro.build.date.utc").toLong()).time)).toBoolean()
+        return if (joResponse.getString("type") == "OTA") {
+            SimpleDateFormat("dd/MM/yyyy").parse(joResponse.getString("date")) >
+                    SimpleDateFormat("dd/MM/yyyy").parse(getProp(Constants.PROP_OTA_DATE))
+        } else {
+            SimpleDateFormat("dd/MM/yyyy").parse(joResponse.getString("date")) >
+                    Date(Timestamp(getProp("ro.build.date.utc").toLong()).time)
+        }
     }
 
     fun getDirectLink(): String {
