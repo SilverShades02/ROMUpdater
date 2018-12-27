@@ -38,6 +38,8 @@ class Flasher : AppCompatActivity() {
 
         val sFileName = Constants.UPDATE_PACKAGE
         
+        // @todo: implement a root privilege granted check
+        
         // @todo: remove commented lines after UI testing
         aclConsole.add("- Adding recovery boot flag")
         //Shell.su("echo 'boot-recovery ' > /cache/recovery/command").submit()
