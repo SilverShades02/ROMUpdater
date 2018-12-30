@@ -3,7 +3,8 @@
 		"ExampleROM": {
 			"type": "OTA",
 			"date": "23/12/18",
-			"link": "",
+			"linkType": "drive",
+			"fileId": "19ch2ONHF-UPuw80p0D_8yOU_wQdsbfeU",
 			"hash": "b936a5afe13006b95e34d7f96e11c9e8"
 		}
 	}
